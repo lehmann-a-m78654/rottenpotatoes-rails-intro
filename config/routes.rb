@@ -4,7 +4,9 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'movies#index'
-  get '/movies/sort_title', to: 'movies#sort_title'
+  get 'movies/sort_title' => 'movies#sort_title'
+  # get 'movies/sort_title' => movies_path('sort_title')
+  get 'movies/sort_release_date' => 'movies#sort_release_date'
 
 
   # Example of regular route:
@@ -15,7 +17,7 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-
+  
   resources :movies
   
   # Example resource route with options:

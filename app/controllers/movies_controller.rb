@@ -43,6 +43,17 @@ class MoviesController < ApplicationController
   end
   
   def sort_title
+    @movies = Movie.order('title')
+    params[:title_header] = 'hilite'
+    params[:release_date_header] = ''
+    # redirect_to movies_path
+    render 'index'
   end
-
+  
+  def sort_release_date
+    @movies = Movie.order('release_date')
+    params[:title_header] = ''
+    params[:release_date_header] = 'hilite'
+    render 'index'
+  end
 end
