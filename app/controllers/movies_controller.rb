@@ -20,10 +20,12 @@ class MoviesController < ApplicationController
     #   params[:ratings] = session[:ratings]
     # end
     
-    if params[:ratings] == nil
+    if params[:ratings] == nil and session[:ratings] == nil
       params[:ratings] = {'G' => 1, 'PG' => 1, 'PG-13' => 1, 'R' => 1}
-      # //session[:ratings] = params[:ratings]
+    elsif params[:ratings] == nil
+      params[:ratings] = session[:ratings]
     end
+      # //session[:ratings] = params[:ratings]
     # elsif params[:ratings] == nil
     #   # params[:ratings] = {'G' => 0, 'PG' => 0, 'PG-13' => 0, 'R' => 0}
     #   params[:ratings] = session[:ratings]
@@ -31,7 +33,17 @@ class MoviesController < ApplicationController
       
     # else
     # params[:ratings] = session[:ratings]
-    @movies = Movie.where(rating: params[:ratings].keys)
+    session.merge!(params)
+    params.merge!(session)
+    
+    if params[:title_header] =='hilite'
+      @movies = Movie.order('title').where(rating: session[:ratings].keys)
+    elsif params[:release_date_header] == 'hilite'
+      @movies = Movie.order('release_date').where(rating: session[:ratings].keys)
+    else
+      @movies = Movie.where(rating: session[:ratings].keys)
+    end
+    
     # session[:ratings] = params[:ratings]
     # end
     
@@ -69,19 +81,37 @@ class MoviesController < ApplicationController
   
   def sort_title
     @all_ratings = ['G','PG','PG-13','R']
-    @movies = Movie.order('title')
+    # @movies = Movie.order('title')
     params[:title_header] = 'hilite'
     params[:release_date_header] = ''
-    params[:ratings] = {'G' => 1, 'PG' => 1, 'PG-13' => 1, 'R' => 1}
+    session.merge!(params)
+    params.merge!(session)
+    
+    if params[:title_header] =='hilite'
+      @movies = Movie.order('title').where(rating: session[:ratings].keys)
+    elsif params[:release_date_header] == 'hilite'
+      @movies = Movie.order('release_date').where(rating: session[:ratings].keys)
+    else
+      @movies = Movie.where(rating: session[:ratings].keys)
+    end
     render 'index'
   end
   
   def sort_release_date
     @all_ratings = ['G','PG','PG-13','R']
-    @movies = Movie.order('release_date')
+    # @movies = Movie.order('release_date')
     params[:title_header] = ''
     params[:release_date_header] = 'hilite'
-    params[:ratings] = {'G' => 1, 'PG' => 1, 'PG-13' => 1, 'R' => 1}
+    session.merge!(params)
+    params.merge!(session)
+    
+    if params[:title_header] =='hilite'
+      @movies = Movie.order('title').where(rating: session[:ratings].keys)
+    elsif params[:release_date_header] == 'hilite'
+      @movies = Movie.order('release_date').where(rating: session[:ratings].keys)
+    else
+      @movies = Movie.where(rating: session[:ratings].keys)
+    end
     render 'index'
   end
 end
